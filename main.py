@@ -109,7 +109,7 @@ def stop(message):
 def help(message):
     bot.send_message(
         message.chat.id,
-        "Каждый день я буду задавать вопрос с \nr/AskReddit\nКоманды:\n/start - добавить чат в рассылку вопроса дня.\n/vopros - показать вопрос дня.\n/help - показать это сообщение."
+        "Каждый день я буду задавать вопрос с \nr/AskReddit\n А еще я могу скачать видео с вк и ютуб\nКоманды:\n/start - добавить чат в рассылку вопроса дня.\n/vopros - показать вопрос дня.\n/help - показать это сообщение."
     )
 
 
@@ -125,14 +125,17 @@ def handle_message(message):
     if message.text.lower() == "да":
         bot.reply_to(message, "Пизда")
 
-    #check if the message contains a link
-    if 'youtube.com' in message.text or 'vk.com' in message.text:
-        # Download the video and get the path to the downloaded file
-        video_path = download_video(message.text)
+      #check if the message contains a link
+  if 'youtube.com' in message.text or 'vk.com' in message.text:
+    # Download the video and get the path to the downloaded file
+    try:
+      video_path = download_video(message.text)
 
-        #send the downloaded video back to the user
-        with open(video_path, 'rb') as f:
-            bot.send_video(message.chat.id, f, supports_streaming=True)
+      #send the downloaded video back to the user
+      with open(video_path, 'rb') as f:
+        bot.send_video(message.chat.id, f, supports_streaming=True)
+    except yt_dlp.utils.DownloadError:
+      bot.reply_to(message, "Видео защищено настройками приватности :с")
 
 
 bot.polling(none_stop=True, interval=0)
